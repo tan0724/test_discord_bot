@@ -10,7 +10,6 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.messages = True
 bot = commands.Bot(command_prefix='%', intents=intents)
-tree = app_commands.CommandTree(bot)
 TOKEN = os.getenv("TOKEN")
 if TOKEN is None:
     print("錯誤：找不到 Discord 令牌。請設置 TOKEN 環境變數。")
