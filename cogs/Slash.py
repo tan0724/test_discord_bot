@@ -117,10 +117,10 @@ class Slash(commands.Cog):
             await interaction.response.send_message(f"@everyone {say}")
             if file is not None and file2 is None:
                 file_url = file.url
-                await interaction.response.send_message(f"@everyone {say} {file_url}")
+                await interaction.followup.send(f"@everyone {say} {file_url}")
                 if file is not None and file2 is not None:
                     file_url2 = file2.url
-                    await interaction.response.send_message(f"@everyone {say} {file_url} {file_url2}")
+                    await interaction.followup.send(f"@everyone {say} {file_url} {file_url2}")
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
