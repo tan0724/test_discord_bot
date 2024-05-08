@@ -14,7 +14,7 @@ class Mute(commands.Cog):
         await interaction.response.send_message(f"{user.mention} 已被禁言 {duration} 秒")
         await asyncio.sleep(duration)
         await user.edit(mute=False)
-        await interaction.response.send_message(f"{user.mention} 禁言已解除")
+        await interaction.followup.send(f"{user.mention} 禁言已解除")
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Mute(bot))

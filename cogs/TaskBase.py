@@ -2,7 +2,7 @@ import time
 import discord
 from discord.ext import commands
 from discord.ext import tasks
-
+from discord import app_commands
 
 class TaskBase(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -33,7 +33,11 @@ class TaskBase(commands.Cog):
             # 錯誤輸出
             print(erro)
 
-
+    @app_commands.command(name = "delete_online", description = "清除機器人狀態")
+    @app_commands.checks.has_permissions(manage_administrator=True)
+    async def delete_online(self, interaction: discord.Interaction):
+        await self.bot.change_presence(activity=None)
+        await interaction.response.send_message("已清除狀態")
 
 # Cog 載入 Bot 中
 async def setup(bot: commands.Bot):
