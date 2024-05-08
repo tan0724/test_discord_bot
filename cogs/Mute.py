@@ -8,7 +8,7 @@ class Mute(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="mute",description="禁言使用者")
-    @commands.has_permissions(manage_roles=True)
+    @app_commands.checks.has_permissions(manage_roles=True)
     async def mute(self,interaction: discord.Interaction, user: discord.Member, duration: int):
         await user.edit(mute=True)
         await interaction.response.send_message(f"{user.mention} 已被禁言 {duration} 秒")
