@@ -1,3 +1,4 @@
+from typing import Optional
 import discord
 import sqlite3
 import random
@@ -110,6 +111,16 @@ class Slash(commands.Cog):
     async def かつどう(self,interaction: discord.Interaction):
         await interaction.response.send_message("https://discord.com/events/1213748875471364137/1234807842117255208")
     
+    @app_commands.command(name = "upfile", description = "讓機器人幫你傳送訊息並提及全部人")
+    async def upfile(self,interaction: discord.Interaction,file: Optional[discord.Attachment],file2:Optional[discord.Attachment] ,say:str):
+        if file is None and file2 is None:
+            await interaction.response.send_message(f"@everyone {say}")
+            if file is not None and file2 is None:
+                file_url = file.url
+                await interaction.response.send_message(f"@everyone {say} {file_url}")
+                if file is not None and file2 is not None:
+                    file_url2 = file2.url
+                    await interaction.response.send_message(f"@everyone {say} {file_url} {file_url2}")
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
