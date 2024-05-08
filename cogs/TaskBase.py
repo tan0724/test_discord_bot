@@ -34,7 +34,7 @@ class TaskBase(commands.Cog):
             print(erro)
 
     @app_commands.command(name = "delete_online", description = "清除機器人狀態")
-    @app_commands.checks.has_permissions(manage_administrator=True)
+    @app_commands.checks.has_permissions(manage_guild=True)
     async def delete_online(self, interaction: discord.Interaction):
         await self.bot.change_presence(activity=None)
         await interaction.response.send_message("已清除狀態")
