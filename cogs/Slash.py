@@ -105,6 +105,7 @@ class Slash(commands.Cog):
         embed.add_field(name='新增貨幣代碼', value='使用方式 【iso4217 貨幣中文 貨幣代碼】', inline=False)
         embed.add_field(name='/更改文字頻道名稱', value='<文字頻道> <新的名稱>', inline=False)
         embed.add_field(name='/更改語音頻道名稱', value='<語音頻道> <新的名稱>', inline=False)
+        
         await interaction.response.send_message(embed=embed)
     
     @app_commands.command(name = "活動", description = "查看目前活動")
@@ -113,14 +114,7 @@ class Slash(commands.Cog):
     
     @app_commands.command(name = "upfile", description = "讓機器人幫你傳送訊息並提及全部人")
     async def upfile(self,interaction: discord.Interaction,file: Optional[discord.Attachment],file2:Optional[discord.Attachment] ,say:str):
-        if file is None and file2 is None:
-            await interaction.response.send_message(f"@everyone {say}")
-            if file is not None and file2 is None:
-                file_url = file.url
-                await interaction.followup.send(f"@everyone {say} {file_url}")
-                if file is not None and file2 is not None:
-                    file_url2 = file2.url
-                    await interaction.followup.send(f"@everyone {say} {file_url} {file_url2}")
+        await interaction.response.send_message(f"@everyone {say} {file} {file2}")
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
