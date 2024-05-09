@@ -20,6 +20,8 @@ async def on_ready():
     print(f"目前登入身份 --> {bot.user}")
     print(f"載入 {len(slash)} 個斜線指令")
 
+
+
 # 載入指令程式檔案
 @bot.command()
 async def load(ctx, extension):

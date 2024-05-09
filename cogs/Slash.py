@@ -77,20 +77,6 @@ class Slash(commands.Cog):
             else:
                 await interaction.response.send_message('無法獲取匯率數據')
 
-    @app_commands.command(name = "查詢代碼", description = "查詢貨幣代碼")
-    async def 查詢代碼(self,interaction: discord.Interaction, 貨幣名稱:str):
-            # 连接到 SQLite 数据库
-            conn = sqlite3.connect('wansunfapanpandiscordbot.db')
-            cur = conn.cursor()
-            # 执行查询
-            cur.execute("SELECT * FROM iso_4217 WHERE name=?", (貨幣名稱,))
-            # 检索查询结果
-            rows = cur.fetchall()
-            for row in rows:
-                    afn_iso4217 ="{} = {}".format(貨幣名稱,row[1])
-                    await interaction.response.send_message(afn_iso4217)
-            conn.close()
-
     @app_commands.command(name = "help", description = "機器人幫助指令")
     async def help(self,interaction: discord.Interaction):
         random7_int = random.randint(0, 255)
