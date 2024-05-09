@@ -8,6 +8,7 @@ load_dotenv()
 intents = discord.Intents.default()
 intents.message_content = True
 intents.messages = True
+intents.guilds = True
 bot = commands.Bot(command_prefix='%', intents=intents)
 TOKEN = os.getenv("TOKEN")
 if TOKEN is None:
