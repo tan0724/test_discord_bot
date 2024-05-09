@@ -18,4 +18,4 @@ class Newcode(commands.Cog):
             await interaction.response.send_message("你沒有權限進行此命令")
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(Newcode(bot))
+    await bot.add_cog(Newcode(bot),guild = discord.Object(id = 1213748875471364137))
