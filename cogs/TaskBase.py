@@ -27,7 +27,8 @@ class TaskBase(commands.Cog):
             # 等待bot ready
             await self.bot.wait_until_ready()
             # 變更bot狀態
-            await self.bot.change_presence(activity=discord.Game(name=f"{guilds}個伺服器 | {count}個人"))
+            slash = await self.bot.tree.sync()
+            await self.bot.change_presence(activity=discord.Game(name=f"載入 {len(slash)} 個斜線指令"))
             
         except Exception as erro:
             # 錯誤輸出
