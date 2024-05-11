@@ -1,6 +1,5 @@
 from typing import Optional
 import discord
-import sqlite3
 import random
 import datetime
 import requests

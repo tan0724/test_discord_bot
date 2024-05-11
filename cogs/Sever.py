@@ -1,13 +1,6 @@
-from typing import Optional
 import discord
-import sqlite3
-import random
-import datetime
-import requests
 from discord import app_commands
 from discord.ext import commands
-from discord.app_commands import Choice
-import os
 
 
 class Sever(commands.Cog):
