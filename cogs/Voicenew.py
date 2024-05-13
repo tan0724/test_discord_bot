@@ -63,7 +63,7 @@ class Voicenew(commands.Cog):
             if after.channel.id == row[4]:
                 guild = member.guild
                 category = after.channel.category
-                newchannel = await guild.create_voice_channel(name=f"{member.display_name} 的房間", category=category)
+                newchannel = await guild.create_voice_channel(name=f"{member.display_name} 的房間", category=category,rtc_region="japan")
                 print(f"已創建 {newchannel.name} 在 {category.name}")
                 await member.move_to(newchannel)
                 print(f"已移動 {member.display_name} 到 {newchannel.name}")
