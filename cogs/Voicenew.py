@@ -1,12 +1,28 @@
-import datetime
-import random
 import discord
 from discord.ext import commands
 from discord import app_commands
 from discord.ext import commands, tasks
-import json
-from json import load
-channel_creators = {}
+import sqlite3
+
+#drop table 
+con = sqlite3.connect('voicenew.db') # 連線資料庫
+cur = con.cursor() # 建立游標
+ # 查詢第一筆資料
+cur.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name=?", ("voicenew",))
+row = cur.fetchone()[0]
+    # 查詢資料庫是否存在
+
+if row == 0:
+    cur.execute("CREATE TABLE voicenew(sever TEXT,categoryname TEXT, categoryid NUMERIC,channelname TEXT,channelid NUMERIC)")
+    cur.execute("CREATE TABLE newchannel(channelname TEXT,channelid NUMERIC)")
+    con.commit()
+    print("表格 'voicenew' 已建立.")
+else:
+    print("表格“voicenew”已存在.")
+    con.commit()
+    
+
+
 
 class Voicenew(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -20,57 +36,78 @@ class Voicenew(commands.Cog):
     @app_commands.command(name="設定動態語音頻道", description="設定動態語音頻道入口")
     async def newvoicechannel(self, interaction: discord.Interaction, category: discord.CategoryChannel, voice: discord.VoiceChannel): 
         await interaction.response.send_message(f"已設定動態語音入口為 {voice.name}")
-        print(voice)
-        print(category)
-        jsonFile = open('demo\\demo.json','a')
-        channel_creators[category.name] = voice.name
-        json.dump(channel_creators, jsonFile,indent=2)
-        jsonFile.close()
+        sever = interaction.guild
+        print(sever,category,voice)
+        con = sqlite3.connect('voicenew.db')
+        print("已連線資料庫")
+        cur = con.cursor()
+        print("已建立游標")
+        cur.execute("INSERT INTO voicenew (sever,categoryname,categoryid,channelname,channelid) VALUES (?,?,?,?,?)",(sever.name, category.name,category.id, voice.name,voice.id))
+        con.commit()
+        print(f"{sever},{category},{voice} 存入")
+        con.close()
+        cur.close()
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
-        jsonFile = open('demo\\demo.json','r')
-        data = jsonFile.read()
-        target_channel_name_date = json.JSONDecoder().decode(data)
-        jsonFile.close()
-        target_channel_name = target_channel_name_date[after.channel.category]
-        if after.channel.name == target_channel_name:
-            guild = member.guild
-            category = discord.utils.get(guild.categories, name=after.channel.category)
-            if category is None:
-                print(f'找不到名稱為 "{after.channel.category}" 的類別！')
-                return
+        if (after.channel is not None and before.channel is None) or (before.channel != after.channel and after.channel is not None):
+            conn = sqlite3.connect("voicenew.db")
+            comn = conn.cursor()
+            comn.execute("SELECT * FROM voicenew WHERE sever=?",(member.guild.name,))
+            rows = comn.fetchall()
+            conn.commit()
+            comn.close()
+            conn.close()
+            for row in rows:
+                print(f"{member.display_name} 加入 {after.channel.name}")
+            if after.channel.id == row[4]:
+                guild = member.guild
+                category = after.channel.category
+                newchannel = await guild.create_voice_channel(name=f"{member.display_name} 的房間", category=category)
+                print(f"已創建 {newchannel.name} 在 {category.name}")
+                await member.move_to(newchannel)
+                print(f"已移動 {member.display_name} 到 {newchannel.name}")
+                try:
+                    await newchannel.set_permissions(member, manage_channels=True)
+                    print(f"已給予{member.name} {newchannel.name} 的管理權限")                
+                except:
+                    print("給予權限時發生未知錯誤")
+                try:
+                    conn = sqlite3.connect('voicenew.db')
+                    print("資料庫連接成功")
+                except sqlite3.Error as e:
+                    print(f"資料庫連接時發生錯誤: {e}")
+                cur = conn.cursor()
+                cur.execute("INSERT INTO newchannel (channelname, channelid) VALUES (?, ?)", (newchannel.name, newchannel.id))
+                conn.commit()
+                conn.close()
+        
+        if (before.channel is not None and after.channel is None) or (before.channel != after.channel and before.channel is not None):
+            try:
+                # 連接
+                conn = sqlite3.connect("voicenew.db")
+                cursor = conn.cursor()
+                print("資料庫連接成功4")
+                # 查詢
+                cursor.execute("SELECT * FROM newchannel")
+                rows = cursor.fetchall()
+                for row in rows:
+                    channel_id = int(row[1])
+                    channel = self.bot.get_channel(channel_id)
+                    if channel is None:
+                        cursor.execute("DELETE FROM newchannel WHERE channelid=?", (channel_id,))
+                    elif len(channel.members) == 0:
+                        await channel.delete()
+                        print(f"頻道 {channel.name} 已被刪除")
+                        cursor.execute("DELETE FROM newchannel WHERE channelid=?", (channel_id,))
+                # 提交事务并关闭数据库连接
+                conn.commit()
+                cursor.close()
+                conn.close()
 
-            # 创建新的语音频道并设置类别
-            new_channel = await guild.create_voice_channel(name=f"{member} 的房間", category=category)
-
-            # 给进入者管理新频道的权限
-            await new_channel.set_permissions(member, manage_channels=True)
-
-            print(f'已在 "{after.channel.category}" 中新增語音頻道 "{new_channel.name}"，给予 {member.display_name} 管理權限！')
-            await member.move_to(new_channel)
-            print(f'{member.display_name} 被移動到 {new_channel.name}')
-            channel_creators1 = {}
-            channel_creators1[new_channel.id] = member.id
-            jsonFile = open('demo\\demo.json','a')
-            json.dump(channel_creators1, jsonFile,indent=2)
-            jsonFile.close()
-
-    @tasks.loop(minutes=1)  # 每隔 5 分钟运行一次
-    async def check_channel_status(self):
-        jsonFile = open('demo\\demo.json','r')
-        data = jsonFile.read()
-        channel_creators2 = json.JSONDecoder().decode(data)
-        jsonFile.close()
-        for channel_id in list(channel_creators2.items()):
-            channel = self.bot.get_channel(channel_id)
-            if channel is None:
-                del channel_creators2[channel_id]
-            else:
-                if len(channel.members) == 0:
-                    await channel.delete()
-                    print(f'頻道 {channel.name} 已被刪除')
-
+            except sqlite3.Error as e:
+                print(f"資料庫連接時發生錯誤4: {e}")
+    
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Voicenew(bot))
