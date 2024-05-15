@@ -93,13 +93,30 @@ class Slash(commands.Cog):
         
         await interaction.response.send_message(embed=embed)
     
-    @app_commands.command(name = "活動", description = "查看目前活動")
-    async def かつどう(self,interaction: discord.Interaction):
-        await interaction.response.send_message("https://discord.com/events/1213748875471364137/1234807842117255208")
-    
     @app_commands.command(name = "upfile", description = "讓機器人幫你傳送訊息並提及全部人")
     async def upfile(self,interaction: discord.Interaction,file: Optional[discord.Attachment],file2:Optional[discord.Attachment] ,say:str):
         await interaction.response.send_message(f"@everyone {say} {file} {file2}")
+
+    @app_commands.command(name="標雷盤",description="發送食物 標 雷盤")
+    @app_commands.choices(
+        say = [
+            Choice(name = "早餐", value = "1"),
+            Choice(name = "午餐", value = "2"),
+            Choice(name = "晚餐", value = "3"),
+            Choice(name = "宵夜", value = "4"),
+        ]
+)
+    async def qnor(self,interaction: discord.Interaction,file:discord.Attachment,say:Choice[str],member:discord.member):
+        say = say.name
+        if interaction.guild.id == 1213748875471364137 :
+            await interaction.response.send_message(f"<@557540063525994496> {say} {file}")
+        else:
+            await interaction.response.send_message("此伺服器禁用此功能")
+
+
+
+
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
