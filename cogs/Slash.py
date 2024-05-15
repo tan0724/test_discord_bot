@@ -106,15 +106,38 @@ class Slash(commands.Cog):
             Choice(name = "宵夜", value = "4"),
         ]
 )
-    async def qnor(self,interaction: discord.Interaction,file:discord.Attachment,say:Choice[str],member:discord.member):
+    async def qnor(self,interaction: discord.Interaction,file:discord.Attachment,say:Choice[str]):
         say = say.name
         if interaction.guild.id == 1213748875471364137 :
             await interaction.response.send_message(f"<@557540063525994496> {say} {file}")
         else:
             await interaction.response.send_message("此伺服器禁用此功能")
 
+    @app_commands.command(name="新增動態文字頻道",description="新增屬於你的文字頻道")
+    async def newchannelyou(self,interaction:discord.Interaction,channelneme:str):
+        guild = interaction.guild
+        newchannel = await guild.create_text_channel(name=channelneme,topic=f"屬於 {interaction.user.name} 與他的朋友們的專屬文字頻道,使用完畢記得刪除!請注意!扳手還是看的到此頻道")
+        overwrites = {
+            guild.default_role: discord.PermissionOverwrite(read_messages=False)
+        }
+        await newchannel.set_permissions(interaction.user, manage_channels=True,read_messages=True)
+        await newchannel.edit(overwrites=overwrites)
+        await interaction.user.send(f"""已創建專屬於你的文字頻道在: {interaction.guild.name} 
+現在快使用/給予你的朋友觀看頻道的權利吧! 
+頻道使用完畢請記得刪除 /刪除文字頻道""")
+        await newchannel.send(f"""已創建專屬於你的文字頻道在: {interaction.guild.name} 
+現在快使用/給予你的朋友觀看頻道的權利吧! 
+頻道使用完畢請記得刪除 /刪除文字頻道""")
 
-
+    @app_commands.command(name="給予專屬頻道加入權限",description="給予專屬頻道加入權限")
+    @app_commands.checks.has_permissions(manage_channels=True)
+    async def giveglass(self,interaction:discord.Interaction,username:discord.Member,channel:discord.TextChannel,give_or_out:bool):
+        if give_or_out == True:
+            await channel.set_permissions(username, read_messages=True)
+            await interaction.response.send_message(f"已給予{username} 頻道 {channel.name} 觀看權限")
+        if give_or_out == False:
+            await channel.set_permissions(username, read_messages=False)
+            await interaction.response.send_message(f"已剝奪{username} 頻道 {channel.name} 觀看權限")
 
 
 
