@@ -69,7 +69,7 @@ class Voicenew(commands.Cog):
                 print(f"已移動 {member.display_name} 到 {newchannel.name}")
                 try:
                     await newchannel.set_permissions(member, manage_channels=True)
-                    print(f"已給予{member.name} {newchannel.name} 的管理權限")                
+                    print(f"已給予{member.name} {newchannel.name} 的管理權限")              
                 except:
                     print("給予權限時發生未知錯誤")
                 try:
