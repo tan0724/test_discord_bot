@@ -10,13 +10,13 @@ class Channelname(commands.Cog):
     @app_commands.checks.has_permissions(manage_channels=True)
     async def changetextchannelname(self,interaction: discord.Interaction, channel: discord.TextChannel, new_name: str):
             await channel.edit(name=new_name)
-            await interaction.response.send_message(f"已將頻道名稱更改為 {new_name}")
+            await interaction.response.send_message(f"已將{channel.name}名稱更改為 {new_name}")
 
     @app_commands.command(name = "更改語音頻道名稱", description = "更改語音頻道名稱")
     @app_commands.checks.has_permissions(manage_channels=True)
     async def change_textchannel_name(self,interaction: discord.Interaction, channel: discord.VoiceChannel, new_name: str):
             await channel.edit(name=new_name)
-            await interaction.response.send_message(f"已將頻道名稱更改為 {new_name}")
+            await interaction.response.send_message(f"已將{channel.name}名稱更改為 {new_name}")
 
     @app_commands.command(name = "刪除文字頻道", description = "刪除文字頻道")
     @app_commands.checks.has_permissions(manage_channels=True)
