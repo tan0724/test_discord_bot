@@ -9,7 +9,7 @@ class Sever(commands.Cog):
 
     @app_commands.command(name="sever_list",description = "列出機器人所在伺服器")
     async def sever_list(self, interaction: discord.Interaction,):
-        if interaction.user.id == 710128890240041091:
+        if interaction.user.id == 710128890240041091 or 1022588836032806993 or 906188519083491359 or 1158951186452451440:
             await interaction.response.send_message('伺服器列表:')
             guilds = self.bot.guilds
             for guild in guilds: 
@@ -21,4 +21,4 @@ class Sever(commands.Cog):
                     await interaction.followup.send(f"No invite found for {guild.name}")
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(Sever(bot))
+    await bot.add_cog(Sever(bot),guild = discord.Object(id = 1213748875471364137))
