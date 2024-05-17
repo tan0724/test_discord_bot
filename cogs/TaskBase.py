@@ -34,6 +34,8 @@ class TaskBase(commands.Cog):
             # 錯誤輸出
             print(erro)
 
+        
+
 
 
         
