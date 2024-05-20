@@ -33,9 +33,11 @@ class Messagecommand(commands.Cog):
         await interaction.response.send_message(f'User: {user.name}\nID: {user.id}')
 
     async def message_info(self, interaction: discord.Interaction, message: discord.Message):
-        """Handle the message context menu action."""
-        await message.reply("<@557540063525994496>",mention_author=False)
-        await interaction.response.send_message("已執行命令",ephemeral=True)
+        if interaction.guild.id == 1213748875471364137:
+            await message.reply("<@557540063525994496>",mention_author=False)
+            await interaction.response.send_message("已執行命令",ephemeral=True)
+        else:
+            await interaction.response.send_message("此伺服器不支援此命令",ephemeral=True)
 
     async def test(self, interaction:discord.Interaction,message:discord.Message):
         await message.reply("測試",mention_author=False)

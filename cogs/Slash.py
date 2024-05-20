@@ -7,6 +7,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord.app_commands import Choice
 import os
+import aiohttp
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -75,43 +76,11 @@ class Slash(commands.Cog):
                     await interaction.response.send_message('無效的貨幣代碼')
             else:
                 await interaction.response.send_message('無法獲取匯率數據')
-
-    @app_commands.command(name = "help", description = "機器人幫助指令")
-    async def help(self,interaction: discord.Interaction):
-        random7_int = random.randint(0, 255)
-        random8_int = random.randint(0, 255)
-        random9_int = random.randint(0, 255)
-        emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
-        embed = discord.Embed(title='指令列表', description='以下是可用指令列表：', color= emb_color,timestamp = datetime.datetime.now())
-        embed.add_field(name='/help', value='幫助指令', inline=False)
-        embed.add_field(name='/提問', value='讓機器人回答你的問題', inline=False)
-        embed.add_field(name='/匯率', value='查看匯率', inline=False)
-        embed.add_field(name='/查代碼', value='查詢貨幣代碼', inline=False)
-        embed.add_field(name='新增貨幣代碼', value='使用方式 【iso4217 貨幣中文 貨幣代碼】', inline=False)
-        embed.add_field(name='/更改文字頻道名稱', value='<文字頻道> <新的名稱>', inline=False)
-        embed.add_field(name='/更改語音頻道名稱', value='<語音頻道> <新的名稱>', inline=False)
-        
-        await interaction.response.send_message(embed=embed)
     
     @app_commands.command(name = "upfile", description = "讓機器人幫你傳送訊息並提及全部人")
     async def upfile(self,interaction: discord.Interaction,file: Optional[discord.Attachment],file2:Optional[discord.Attachment] ,say:str):
         await interaction.response.send_message(f"@everyone {say} {file} {file2}")
 
-    @app_commands.command(name="標雷盤",description="發送食物 標 雷盤")
-    @app_commands.choices(
-        say = [
-            Choice(name = "早餐", value = "1"),
-            Choice(name = "午餐", value = "2"),
-            Choice(name = "晚餐", value = "3"),
-            Choice(name = "宵夜", value = "4"),
-        ]
-)
-    async def qnor(self,interaction: discord.Interaction,file:discord.Attachment,say:Choice[str]):
-        say = say.name
-        if interaction.guild.id == 1213748875471364137 :
-            await interaction.response.send_message(f"<@557540063525994496> {say} {file}")
-        else:
-            await interaction.response.send_message("此伺服器禁用此功能")
 
     @app_commands.command(name="新增動態文字_and_語音頻道",description="新增屬於你的頻道組合")
     async def newchannelyou(self,interaction:discord.Interaction,channelname:str):
@@ -132,9 +101,7 @@ class Slash(commands.Cog):
         except Exception as e:
             print(f'同步頻道權限時發生錯誤：{e}')
 
-        await interaction.user.send(f"""已創建專屬於你的文字頻道在: {interaction.guild.name} 
-現在快使用/給予你的朋友觀看頻道的權利吧! 
-頻道使用完畢請記得刪除 /刪除文字頻道""")
+        await interaction.user.send(f"""已創建專屬於你的文字頻道在: {interaction.guild.name} /n現在快使用/給予你的朋友觀看頻道的權利吧! /n頻道使用完畢請記得刪除 /刪除文字頻道""")
         await newchannel.send(f"""{interaction.user.mention}已創建專屬於你的文字頻道在: {interaction.guild.name} 
 現在快使用/給予你的朋友觀看頻道的權利吧!
 頻道使用完畢請記得刪除 /刪除文字頻道""")
@@ -169,6 +136,23 @@ class Slash(commands.Cog):
             await interaction.response.send_message(f"已剝奪{username} 頻道 {category.name} 觀看權限")
         except Exception as e:
             print(f'同步分類內頻道權限時發生錯誤：{e}')
+
+    @app_commands.command(name="help", description="列出所有斜杠指令")
+    async def help_command(self, interaction: discord.Interaction):
+        try:
+            commands = self.bot.tree.walk_commands()
+            help_message = "以下是所有可用的斜杠命令：\n\n"
+                
+            for command in commands:
+                if isinstance(command, app_commands.Command):
+                    if command.description:
+                        help_message += f"/{command.name} - {command.description}\n"
+                    else:
+                        help_message += f"/{command.name}\n"
+            await interaction.response.send_message(help_message)
+        except Exception as e:
+            await interaction.response.send_message(f'發送訊息時發生錯誤：{e}',ephemeral=True)
+
             
 
     
