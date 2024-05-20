@@ -38,7 +38,7 @@ class Messagecommand(commands.Cog):
         await interaction.response.send_message("已執行命令",ephemeral=True)
 
     async def test(self, interaction:discord.Interaction,message:discord.Message):
-        await message.reply("測試")
+        await message.reply("測試",mention_author=False)
         await interaction.response.send_message("已執行命令",ephemeral=True)
 
 
