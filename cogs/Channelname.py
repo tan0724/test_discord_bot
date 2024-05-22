@@ -12,18 +12,18 @@ class Channelname(commands.Cog):
     @app_commands.checks.has_permissions(manage_channels=True)
     async def changetextchannelname(self,interaction: discord.Interaction, channel: discord.TextChannel, new_name: str):
             await channel.edit(name=new_name)
-            await interaction.response.send_message(f"已將{channel.name}名稱更改為 {new_name}")
+            await interaction.response.send_message(f"{interaction.user.nick or interaction.user.name}已將此頻道名稱更改為 {new_name}")
 
     @app_commands.command(name = "更改語音頻道名稱", description = "更改語音頻道名稱")
     @app_commands.checks.has_permissions(manage_channels=True)
     async def change_voicechannel_name(self,interaction: discord.Interaction, channel: discord.VoiceChannel, new_name: str):
             await channel.edit(name=new_name)
-            await interaction.response.send_message(f"已將{channel.name}名稱更改為 {new_name}")
+            await interaction.response.send_message(f"{interaction.user.nick or interaction.user.name}已將此頻道名稱更改為 {new_name}")
 
     @app_commands.command(name = "刪除文字頻道", description = "刪除文字頻道")
     @app_commands.checks.has_permissions(manage_channels=True)
     async def deletetextchannel(self,interaction: discord.Interaction, channel: discord.TextChannel):
-            await interaction.response.send_message(f"已刪除{channel}頻道")
+            await interaction.response.send_message(f"已刪除{channel.name}頻道")
             await channel.delete()
 
     @app_commands.command(name = "刪除類別", description = "刪除類別")
@@ -40,7 +40,7 @@ class Channelname(commands.Cog):
     @app_commands.command(name = "刪除語音頻道", description = "刪除語音頻道")
     @app_commands.checks.has_permissions(manage_channels=True)
     async def deletevoicechannel(self,interaction: discord.Interaction, channel: discord.VoiceChannel):
-            await interaction.response.send_message(f"已刪除{channel}頻道")
+            await interaction.response.send_message(f"已刪除{channel.name}頻道")
             await channel.delete()
 
     @app_commands.command(name="更改語音頻道位元率", description="更改語音頻道位元率")
