@@ -153,12 +153,29 @@ class Slash(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f'發送訊息時發生錯誤：{e}',ephemeral=True)
 
-            
-
+    @app_commands.command(name="new_role",description="創建新的身分組")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def newrole(self,interaction:discord.Interaction,new_role_name:str):
+        try:
+            guild = interaction.guild
+            newrloe = await guild.create_role(name=new_role_name)
+            await interaction.response.send_message(f"已新增{newrloe.name}",ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}",ephemeral=True)
     
-
-
-
+    @app_commands.command(name="give_or_out_user_new_role",description="給予或移除伺服器成員新的身分組")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def usernewrole(self,interaction:discord.Interaction,role:discord.Role,member:discord.Member,out_give:bool):
+        try:
+            if out_give == True:
+                await member.add_roles(role)
+                await interaction.response.send_message(f"已給予{member.nick} {role.name} 身分組")
+            else:
+                await member.remove_roles(role)
+                await interaction.response.send_message(f"已刪除{member.nick} 的 {role} 身分組")
+        except Exception as e:
+            await interaction.response.send_message(f"報錯:{e}",ephemeral=True)
+            
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
  

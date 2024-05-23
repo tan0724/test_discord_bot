@@ -9,7 +9,7 @@ class Mute(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name = "mute", description = "禁言在語音頻道的使用者")
-    @app_commands.checks.has_permissions(manage_roles=True)
+    @app_commands.checks.has_permissions(administrator=True)
     async def mute(self,interaction: discord.Interaction, user: discord.Member, duration: int):
         await user.edit(mute=True)
         await interaction.response.send_message(f"{user.mention} 已被禁言 {duration} 秒")
@@ -18,7 +18,7 @@ class Mute(commands.Cog):
         await interaction.followup.send(f"{user.mention} 禁言已解除")
 
     @app_commands.command(name = "timeout", description = "禁言使用者")
-    @app_commands.checks.has_permissions(manage_roles=True)
+    @app_commands.checks.has_permissions(administrator=True)
     async def timeout(self,interaction: discord.Interaction, user: discord.Member, duration: int):
         await user.edit(timed_out_until=discord.utils.utcnow() + datetime.timedelta(minutes=duration))
         await interaction.response.send_message(f"{user.mention} 已被禁言 {duration} 秒")
@@ -26,7 +26,7 @@ class Mute(commands.Cog):
         await interaction.followup.send(f"{user.mention} 禁言已解除")
 
     @app_commands.command(name = "outtimeout", description = "解禁使用者")
-    @app_commands.checks.has_permissions(manage_roles=True)
+    @app_commands.checks.has_permissions(administrator=True)
     async def outtimeout(self,interaction: discord.Interaction, user: discord.Member):
         await user.edit(timed_out_until=discord.utils.utcnow())
         await interaction.followup.send(f"{user.mention} 禁言已解除")
