@@ -22,7 +22,6 @@ async def on_ready():
     print(f"載入 {len(slash)} 個斜線指令")
 
 
-
 # 載入指令程式檔案
 @bot.command()
 async def load(ctx, extension):
