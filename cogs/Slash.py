@@ -101,17 +101,20 @@ class Slash(commands.Cog):
         except Exception as e:
             print(f'同步頻道權限時發生錯誤：{e}')
 
-        await interaction.user.send(f"""已創建專屬於你的文字頻道在: {interaction.guild.name} /n現在快使用/給予你的朋友觀看頻道的權利吧! /n頻道使用完畢請記得刪除 /刪除文字頻道""")
+        await interaction.user.send(f"""已創建專屬於你的文字頻道在: {interaction.guild.name} \n現在快使用/給予你的朋友觀看頻道的權利吧! \n頻道使用完畢請記得刪除 /刪除文字頻道""")
         await newchannel.send(f"""{interaction.user.mention}已創建專屬於你的文字頻道在: {interaction.guild.name} 
 現在快使用/給予你的朋友觀看頻道的權利吧!
 頻道使用完畢請記得刪除 /刪除文字頻道""")
 
     @app_commands.command(name="給予專屬頻道加入權限",description="給予專屬頻道加入權限")
     @app_commands.checks.has_permissions(manage_channels=True)
-    async def giveglass(self,interaction:discord.Interaction,username:discord.Member,category:discord.CategoryChannel,give_or_out:bool):
+    async def giveglass(self,interaction:discord.Interaction,username:discord.Member,username1:Optional[discord.Member],category:discord.CategoryChannel,give_or_out:bool):
         if give_or_out == True:
             await category.set_permissions(username, read_messages=True)
             channels = category.channels
+        if give_or_out == True:
+            if username1 is not None:
+                await category.set_permissions(username1, read_messages=True)
         if not channels:
             print(f'分類 {category.name} 中沒有頻道。')
             return
@@ -141,15 +144,20 @@ class Slash(commands.Cog):
     async def help_command(self, interaction: discord.Interaction):
         try:
             commands = self.bot.tree.walk_commands()
-            help_message = "以下是所有可用的斜杠命令：\n\n"
-                
+            help_message = ""
+            random7_int = random.randint(0, 255)
+            random8_int = random.randint(0, 255)
+            random9_int = random.randint(0, 255)
+            emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
             for command in commands:
                 if isinstance(command, app_commands.Command):
                     if command.description:
                         help_message += f"/{command.name} - {command.description}\n"
                     else:
                         help_message += f"/{command.name}\n"
-            await interaction.response.send_message(help_message)
+            embed = discord.Embed(title="# help", color= emb_color)
+            embed.add_field(name="以下是所有可用的斜杠命令：\n\n",value=help_message,inline=False)
+            await interaction.response.send_message(embed=embed)
         except Exception as e:
             await interaction.response.send_message(f'發送訊息時發生錯誤：{e}',ephemeral=True)
 
@@ -178,4 +186,3 @@ class Slash(commands.Cog):
             
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
- 
