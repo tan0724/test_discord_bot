@@ -1,3 +1,5 @@
+import datetime
+import subprocess
 from typing import Optional
 import discord
 import random
@@ -7,6 +9,7 @@ from discord.ext import commands
 from discord.app_commands import Choice
 import os
 from dotenv import load_dotenv
+import asyncio
 
 load_dotenv()
 
@@ -15,7 +18,7 @@ if API_KEY is None:
     print("錯誤：找不到 API 令牌。請設置 API 環境變數。")
     exit()
 
-
+ffmpeg_process = None  # 將ffmpeg_process定義為全局變量
 
 class Slash(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -190,6 +193,46 @@ class Slash(commands.Cog):
             await interaction.response.send_message("已執行指令",ephemeral=True)
         except Exception as e:
             await interaction.response.send_message(f"發生錯誤:{e}")
+
+    @app_commands.command(name="join_in_voicechannel_record",description="讓機器人進入語音頻道錄音")
+    async def record(self,interaction:discord.Interaction,channel:discord.VoiceChannel):
+        try:
+            guild = interaction.guild
+            await channel.connect()
+            vc = guild.voice_client
+            # 使用 FFmpeg 進行錄音
+            ffmpeg_process = subprocess.Popen([
+                'ffmpeg', 
+                '-y',  # 覆蓋輸出文件
+                '-f', 's16le', 
+                '-ar', '44100', 
+                '-ac', '2', 
+                '-i', 'pipe:0',
+                f'{channel.name}.wav'
+            ], stdin=subprocess.PIPE)
+
+            def audio_callback(data):
+                ffmpeg_process.stdin.write(data)
+
+            vc.listen(discord.PCMAudio(audio_callback))
+            await interaction.response.send_message("已開始錄音")
+        
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
+
+    @app_commands.command(name="stop_record",description="讓機器人停止錄音並離開語音")
+    async def stoprecord(self,interaction:discord.Interaction):
+        try:
+            guild = interaction.guild
+            vc = guild.voice_client
+            if ffmpeg_process is not None:
+                ffmpeg_process.stdin.close()
+                ffmpeg_process.wait()
+            await guild.voice_client.disconnect()
+            await interaction.response.send_message("結束錄音")
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
