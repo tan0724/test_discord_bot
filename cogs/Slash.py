@@ -181,6 +181,15 @@ class Slash(commands.Cog):
                 await interaction.response.send_message(f"已刪除{member.nick} 的 {role} 身分組")
         except Exception as e:
             await interaction.response.send_message(f"報錯:{e}",ephemeral=True)
-            
+
+    @app_commands.command(name="say",description="讓機器人幫你說話")
+    async def say(self,interaction:discord.Interaction,話:str):
+        try:
+            channel = interaction.channel
+            await channel.send(f"# {話}")
+            await interaction.response.send_message("已執行指令",ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"發生錯誤:{e}")
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))

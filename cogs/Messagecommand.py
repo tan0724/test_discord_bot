@@ -15,13 +15,6 @@ class Messagecommand(commands.Cog):
         )
         self.bot.tree.add_command(self.user_menu)
 
-        # Message context menu
-        self.message_menu = app_commands.ContextMenu(
-            name="標雷諾",
-            callback=self.message_info
-        )
-        self.bot.tree.add_command(self.message_menu)
-
         self.message_menu = app_commands.ContextMenu(
             name="翻轉圖片",
             callback=self.rotate
@@ -33,13 +26,6 @@ class Messagecommand(commands.Cog):
     async def user_info(self, interaction: discord.Interaction, user: discord.User):
         """Handle the user context menu action."""
         await interaction.response.send_message(f'User: {user.name}\nID: {user.id}')
-
-    async def message_info(self, interaction: discord.Interaction, message: discord.Message):
-        if interaction.guild.id == 1213748875471364137:
-            await message.reply("<@557540063525994496>",mention_author=False)
-            await interaction.response.send_message("已執行命令",ephemeral=True)
-        else:
-            await interaction.response.send_message("此伺服器不支援此命令",ephemeral=True)
 
     async def rotate(self, interaction:discord.Interaction,message:discord.Message):
         try:

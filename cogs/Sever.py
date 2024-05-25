@@ -16,9 +16,25 @@ class Sever(commands.Cog):
                 invites = await guild.invites()
                 if invites:
                     invite_url = invites[0].url
-                    lite += f"Invite for {guild.name}: {invite_url}\n"
+                    lite += f"Invite for {guild.name} {guild.id}: {invite_url}\n"
                 else:
-                    lite += f"No invite found for {guild.name}\n"
+                    lite += f"No invite found for {guild.name} {guild.id}\n"
             await interaction.response.send_message(lite,ephemeral=True)
+
+    @app_commands.command(name="sever_channel",description="列出伺服器頻道")
+    async def sever_channel(self,interaction:discord.Interaction,guildid:str):
+        try:
+            guild = self.bot.get_guild(int(guildid))
+            if guild is not None:
+                channels = guild.channels
+                channel1 = f"以下為{guild.name}所有頻道\n\n"
+                for channel in channels:
+                    channel1 += f"{channel.name} id:{channel.id}\n"
+                await interaction.response.send_message(channel1,ephemeral=True)
+            else:
+                await interaction.response.send_message("錯誤guild為None",ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}",ephemeral=True)
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(Sever(bot))
