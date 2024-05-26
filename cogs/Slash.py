@@ -233,6 +233,24 @@ class Slash(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f"錯誤:{e}")
 
+    @app_commands.command(name="ban",description="停權使用者")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def ban(self,interaction:discord.Interaction,member:discord.Member):
+        try:
+            await member.ban()
+            await interaction.response.send_message(f"已封鎖{member.name}")
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
+
+    @app_commands.command(name="ὀστρακισμός",description="放逐指定成員")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def ὀστρακισμός(self,interaction:discord.Interaction,member:discord.Member):
+        try:
+            await member.kick()
+            await interaction.response.send_message(f"已放逐指定成員{member.name}")
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))

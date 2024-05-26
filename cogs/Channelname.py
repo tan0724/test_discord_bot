@@ -45,9 +45,12 @@ class Channelname(commands.Cog):
 
     @app_commands.command(name="更改語音頻道位元率", description="更改語音頻道位元率")
     @app_commands.checks.has_permissions(manage_channels=True)
-    async def setstatus(self,interaction:discord.Interaction,channel:discord.VoiceChannel,bitrate:int):
-            await channel.edit(bitrate=bitrate)
-            await interaction.response.send_message(f"已將位元率改成{bitrate}")
+    async def setstatus(self,interaction:discord.Interaction,channel:discord.VoiceChannel,bitrate1:int):
+        try:
+            await channel.edit(bitrate=bitrate1)
+            await interaction.response.send_message(f"已將位元率改成{bitrate1}")
+        except Exception as e:
+                await interaction.response.send_message(f"錯誤:{e}")
 
     @app_commands.command(name="更改語音頻道限制人數", description="更改語音頻道限制人數")
     @app_commands.checks.has_permissions(manage_channels=True)
