@@ -1,4 +1,3 @@
-import datetime
 import subprocess
 from typing import Optional
 import discord
@@ -9,7 +8,6 @@ from discord.ext import commands
 from discord.app_commands import Choice
 import os
 from dotenv import load_dotenv
-import asyncio
 
 load_dotenv()
 
