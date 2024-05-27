@@ -1,6 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
+from typing import List, Union
 
 class Channelname(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -63,6 +64,7 @@ class Channelname(commands.Cog):
     async def topicTextChannel(self,interaction:discord.Interaction,channel:discord.TextChannel,topic:str):
             await channel.edit(topic=topic)
             await interaction.response.send_message(f"已將頻道說明設為: {topic}")
+          
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Channelname(bot))

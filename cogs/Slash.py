@@ -249,6 +249,75 @@ class Slash(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f"錯誤:{e}")
 
+    @app_commands.command(name="複製伺服器頻道",description="複製所選的伺服器所有頻道")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def copychannel(self,interaction:discord.Interaction,guildid1:str,guildid2:str):
+        try:
+            guild = self.bot.get_guild(int(guildid1))
+            guild2 = self.bot.get_guild(int(guildid2))
+            try:
+                for category in guild.categories:
+                    await guild2.create_category(name=category.name)
+            except Exception as e:
+                await interaction.response.send_message(f"錯誤:{e}")
+            try:
+                for channel in guild.text_channels:
+                    await guild2.create_text_channel(name=channel.name, category=channel.category)
+            except Exception as e:
+                await interaction.response.send_message(f"錯誤:{e}")
+            try:
+                for channel in guild.voice_channels:
+                    await guild2.create_voice_channel(name=channel.name, category=channel.category)
+            except Exception as e:
+                await interaction.response.send_message(f"錯誤:{e}")
+            await interaction.response.send_message("執行",ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
+
+    @app_commands.command(name="新增文字_and_語音頻道",description="新增頻道組合")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def newcategory(self,interaction:discord.Interaction,channelname:str,categoryname:str):
+        guild = interaction.guild
+        newcategory = await guild.create_category(name=categoryname,position=2)
+        await guild.create_text_channel(name=channelname,category=newcategory)
+        await guild.create_voice_channel(name=channelname,category=newcategory,rtc_region="japan")
+        await interaction.response.send_message("執行",ephemeral=True)
+
+    @app_commands.command(name="新增文字頻道",description="新增文字頻道")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def newchannel(self,interaction:discord.Interaction,channelname:str,category:discord.CategoryChannel):
+        try:
+            guild = interaction.guild
+            await guild.create_text_channel(name=channelname,category=category)
+            await interaction.response.send_message("執行",ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
+
+    @app_commands.command(name="新的表情符號",description="新增表情符號")
+    async def newemoji(self,interaction:discord.Interaction,newemoji:discord.Attachment):
+        if interaction.guild.id == 1238133524662325351:
+            try:
+                image_data = await newemoji.read()
+                emoji = await interaction.guild.create_custom_emoji(name=newemoji.filename.split('.')[0], image=image_data)
+                await interaction.response.send_message(f"成功新增表情符號: <:{emoji.name}:{emoji.id}>")
+            except Exception as e:
+                await interaction.response.send_message(f"錯誤:{e}")
+    
+    @app_commands.command(name="麻看見與看不見",description="獲取揪團打麻的資格")
+    async def chnma(self,interaction:discord.Interaction,yes_no:bool):
+        try:
+            if yes_no == True:
+                if interaction.guild.id == 1238133524662325351:
+                    role = discord.utils.get(interaction.guild.roles, id=1244679020411359330)
+                    await interaction.user.add_roles(role)
+                    await interaction.response.send_message(f"已給予{role.name}")
+            elif yes_no == False:
+                if interaction.guild.id == 1238133524662325351:
+                    role = discord.utils.get(interaction.guild.roles, id=1244679020411359330)
+                    await interaction.user.remove_roles(role)
+                    await interaction.response.send_message(f"已移除{role.name}")
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
