@@ -18,6 +18,9 @@ if API_KEY is None:
 
 ffmpeg_process = None  # 將ffmpeg_process定義為全局變量
 
+def check_if_guild_is_me(interaction: discord.Interaction) -> bool:
+    return interaction.guild.id == 1238133524662325351
+
 class Slash(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -276,7 +279,7 @@ class Slash(commands.Cog):
 
     @app_commands.command(name="新增文字_and_語音頻道",description="新增頻道組合")
     @app_commands.checks.has_permissions(administrator=True)
-    async def newcategory(self,interaction:discord.Interaction,channelname:str,categoryname:str):
+    async def newcategory(self,interaction:discord.Interaction,channelname:str,categoryname:str,):
         guild = interaction.guild
         newcategory = await guild.create_category(name=categoryname,position=2)
         await guild.create_text_channel(name=channelname,category=newcategory)
@@ -302,20 +305,19 @@ class Slash(commands.Cog):
                 await interaction.response.send_message(f"成功新增表情符號: <:{emoji.name}:{emoji.id}>")
             except Exception as e:
                 await interaction.response.send_message(f"錯誤:{e}")
-    
-    @app_commands.command(name="麻看見與看不見",description="獲取揪團打麻的資格")
-    async def chnma(self,interaction:discord.Interaction,yes_no:bool):
+                
+    @app_commands.command(name="隱藏語音頻道",description="隱藏語音頻道並只讓當前在於頻道內的人可見該頻道")
+    async def hide_voice_channel(self,interaction:discord.Interaction,channel:discord.VoiceChannel):
         try:
-            if yes_no == True:
-                if interaction.guild.id == 1238133524662325351:
-                    role = discord.utils.get(interaction.guild.roles, id=1244679020411359330)
-                    await interaction.user.add_roles(role)
-                    await interaction.response.send_message(f"已給予{role.name}")
-            elif yes_no == False:
-                if interaction.guild.id == 1238133524662325351:
-                    role = discord.utils.get(interaction.guild.roles, id=1244679020411359330)
-                    await interaction.user.remove_roles(role)
-                    await interaction.response.send_message(f"已移除{role.name}")
+            guildmembers = interaction.guild.members
+            for guildmember in guildmembers:
+                await channel.set_permissions(guildmember, read_messages=False)
+            channelmembers = channel.members
+            membername = "已給予:"
+            for member in channelmembers:
+                await channel.set_permissions(member, read_messages=True)
+                membername += f"{member.name},"
+            await interaction.response.send_message(f"{membername}觀看權限",ephemeral=True)
         except Exception as e:
             await interaction.response.send_message(f"錯誤:{e}")
 

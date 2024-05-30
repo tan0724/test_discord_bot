@@ -40,5 +40,15 @@ class Sever(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f"錯誤:{e}",ephemeral=True)
 
+    @app_commands.command(name="指定sever邀請",description="指定一個頻道並獲取該頻道的邀請連結")
+    async def channelurl(self,interaction:discord.Interaction,guildid:str):
+        try:
+            if interaction.user.name == "tan_07_24":
+                guild = self.bot.get_guild(int(guildid))
+                guildurl = await guild.invites()
+                await interaction.response.send_message(f"{guild.name} | {guildurl}",ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}",ephemeral=True)
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(Sever(bot))

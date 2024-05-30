@@ -56,9 +56,12 @@ class Channelname(commands.Cog):
     @app_commands.command(name="更改語音頻道限制人數", description="更改語音頻道限制人數")
     @app_commands.checks.has_permissions(manage_channels=True)
     async def user_limitVoiceChannel(self,interaction:discord.Interaction,channel:discord.VoiceChannel,user_limit:int):
+        try:
             await channel.edit(user_limit=user_limit)
             await interaction.response.send_message(f"已限制頻道人數為: {user_limit}")
-            
+        except Exception as e:
+              await interaction.response.send_message(f"錯誤:{e}")
+
     @app_commands.command(name="更改文字頻道說名", description="更改文字頻道說名")
     @app_commands.checks.has_permissions(manage_channels=True)
     async def topicTextChannel(self,interaction:discord.Interaction,channel:discord.TextChannel,topic:str):
