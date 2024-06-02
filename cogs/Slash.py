@@ -7,6 +7,8 @@ from discord import app_commands
 from discord.ext import commands
 from discord.app_commands import Choice
 import os
+import string
+import random
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -297,12 +299,23 @@ class Slash(commands.Cog):
             await interaction.response.send_message(f"錯誤:{e}")
 
     @app_commands.command(name="新的表情符號",description="新增表情符號")
-    async def newemoji(self,interaction:discord.Interaction,newemoji:discord.Attachment):
+    async def newemoji(self,interaction:discord.Interaction,newemoji:discord.Attachment,emojiname:str):
         if interaction.guild.id == 1238133524662325351:
             try:
                 image_data = await newemoji.read()
-                emoji = await interaction.guild.create_custom_emoji(name=newemoji.filename.split('.')[0], image=image_data)
-                await interaction.response.send_message(f"成功新增表情符號: <:{emoji.name}:{emoji.id}>")
+                if len(emojiname) < 23:
+                    emoji = await interaction.guild.create_custom_emoji(name=emojiname, image=image_data)
+                    await interaction.response.send_message(f"成功新增表情符號: <:{emoji.name}:{emoji.id}>")
+                else:
+                    number_of_strings = 1
+                    length_of_string = 8
+                    for x in range(number_of_strings):
+                        emojiname2 = "".join(
+                                random.choice(string.ascii_letters + string.digits)
+                                for _ in range(length_of_string)
+                            )                      
+                    emoji = await interaction.guild.create_custom_emoji(name=emojiname2, image=image_data)
+                    await interaction.response.send_message(f"成功新增表情符號: <:{emoji.name}:{emoji.id}>")
             except Exception as e:
                 await interaction.response.send_message(f"錯誤:{e}")
                 
