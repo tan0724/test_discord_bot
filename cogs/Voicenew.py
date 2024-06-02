@@ -48,6 +48,34 @@ class Voicenew(commands.Cog):
         con.close()
         cur.close()
 
+    @app_commands.command(name="創建動態語音頻道",description="創建動態語音頻道(需在語音頻道內)")
+    async def newvoicenew(self,interaction:discord.Interaction):
+        try:
+                guild = interaction.guild
+                user = interaction.user
+                category = interaction.channel.category
+                newchannel = await guild.create_voice_channel(name=f"{user.display_name} 的房間", category=category,rtc_region="japan")
+                print(f"已創建 {newchannel.name} 在 {category.name}")
+                await user.move_to(newchannel)
+                print(f"已移動 {user.display_name} 到 {newchannel.name}")
+                try:
+                    await newchannel.set_permissions(user, manage_channels=True)
+                    print(f"已給予{user.name} {newchannel.name} 的管理權限")              
+                except:
+                    print("給予權限時發生未知錯誤")
+                try:
+                    conn = sqlite3.connect('voicenew.db')
+                    print("資料庫連接成功")
+                except sqlite3.Error as e:
+                    print(f"資料庫連接時發生錯誤: {e}")
+                cur = conn.cursor()
+                cur.execute("INSERT INTO newchannel (channelname, channelid) VALUES (?, ?)", (newchannel.name, newchannel.id))
+                conn.commit()
+                conn.close()
+                await interaction.response.send_message("已創建動態語音頻道,開始將您傳送過去")
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
+
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         if (after.channel is not None and before.channel is None) or (before.channel != after.channel and after.channel is not None):
