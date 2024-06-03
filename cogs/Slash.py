@@ -197,7 +197,7 @@ class Slash(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f"發生錯誤:{e}")
 
-    @app_commands.command(name="join_in_voicechannel_record",description="讓機器人進入語音頻道錄音")
+    """@app_commands.command(name="join_in_voicechannel_record",description="讓機器人進入語音頻道錄音")
     async def record(self,interaction:discord.Interaction,channel:discord.VoiceChannel):
         try:
             guild = interaction.guild
@@ -234,7 +234,7 @@ class Slash(commands.Cog):
             await guild.voice_client.disconnect()
             await interaction.response.send_message("結束錄音")
         except Exception as e:
-            await interaction.response.send_message(f"錯誤:{e}")
+            await interaction.response.send_message(f"錯誤:{e}")"""
 
     @app_commands.command(name="ban",description="停權使用者")
     @app_commands.checks.has_permissions(administrator=True)

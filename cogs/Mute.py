@@ -11,19 +11,25 @@ class Mute(commands.Cog):
     @app_commands.command(name = "mute", description = "禁言在語音頻道的使用者")
     @app_commands.checks.has_permissions(administrator=True)
     async def mute(self,interaction: discord.Interaction, user: discord.Member, duration: int):
-        await user.edit(mute=True)
-        await interaction.response.send_message(f"{user.mention} 已被禁言 {duration} 秒")
-        await asyncio.sleep(duration)
-        await user.edit(mute=False)
-        await interaction.followup.send(f"{user.mention} 禁言已解除")
+        try:
+            await user.edit(mute=True)
+            await interaction.response.send_message(f"{user.mention} 已被禁言 {duration} 秒")
+            await asyncio.sleep(duration)
+            await user.edit(mute=False)
+            await interaction.followup.send(f"{user.mention} 禁言已解除")
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
 
     @app_commands.command(name = "timeout", description = "禁言使用者")
     @app_commands.checks.has_permissions(administrator=True)
     async def timeout(self,interaction: discord.Interaction, user: discord.Member, duration: int):
-        await user.edit(timed_out_until=discord.utils.utcnow() + datetime.timedelta(minutes=duration))
-        await interaction.response.send_message(f"{user.mention} 已被禁言 {duration} 秒")
-        await asyncio.sleep(duration)
-        await interaction.followup.send(f"{user.mention} 禁言已解除")
+        try:
+            await user.edit(timed_out_until=discord.utils.utcnow() + datetime.timedelta(minutes=duration))
+            await interaction.response.send_message(f"{user.mention} 已被禁言 {duration} 秒")
+            await asyncio.sleep(duration)
+            await interaction.followup.send(f"{user.mention} 禁言已解除")
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
 
     @app_commands.command(name = "outtimeout", description = "解禁使用者")
     @app_commands.checks.has_permissions(administrator=True)
@@ -31,7 +37,7 @@ class Mute(commands.Cog):
         await user.edit(timed_out_until=discord.utils.utcnow())
         await interaction.followup.send(f"{user.mention} 禁言已解除")
 
-    
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Mute(bot))

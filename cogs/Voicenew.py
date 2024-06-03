@@ -34,6 +34,7 @@ class Voicenew(commands.Cog):
     
 
     @app_commands.command(name="設定動態語音頻道", description="設定動態語音頻道入口")
+    @app_commands.checks.has_permissions(administrator=True)
     async def newvoicechannel(self, interaction: discord.Interaction, category: discord.CategoryChannel, voice: discord.VoiceChannel): 
         await interaction.response.send_message(f"已設定動態語音入口為 {voice.name}")
         sever = interaction.guild
@@ -73,6 +74,21 @@ class Voicenew(commands.Cog):
                 conn.commit()
                 conn.close()
                 await interaction.response.send_message("已創建動態語音頻道,開始將您傳送過去")
+        except Exception as e:
+            await interaction.response.send_message(f"錯誤:{e}")
+
+    @app_commands.command(name="保留語音動態房",description="將語音房間設為永久存留")
+    @app_commands.checks.has_permissions(manage_channels=True)
+    async def Retain_the_channel(self,interaction:discord.Interaction,channel:discord.VoiceChannel):
+        try:
+            channel_id = channel.id
+            con = sqlite3.connect("voicenew.db")
+            cur = con.cursor()
+            cur.execute("DELETE FROM newchannel WHERE channelid=?", (channel_id,))
+            con.commit()
+            cur.close()
+            con.close()
+            await interaction.response.send_message("已保存指定頻道")
         except Exception as e:
             await interaction.response.send_message(f"錯誤:{e}")
 
