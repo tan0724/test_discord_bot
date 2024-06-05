@@ -165,13 +165,22 @@ class Slash(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f'發送訊息時發生錯誤：{e}',ephemeral=True)
 
-    @app_commands.command(name="new_role",description="創建新的身分組")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def newrole(self,interaction:discord.Interaction,new_role_name:str):
+    @app_commands.command(name="new_role",description="創建新的身分組並給予自己")
+    @app_commands.describe(new_role_name = "新的身分組名字",color = "16進位制的色碼",give_in_you ="是否給予自己此身分組",reason="原因")
+    async def newrole(self,interaction:discord.Interaction,new_role_name:str,color:str,give_in_you:bool,reason:str):
         try:
             guild = interaction.guild
-            newrloe = await guild.create_role(name=new_role_name)
-            await interaction.response.send_message(f"已新增{newrloe.name}",ephemeral=True)
+            member = interaction.user
+            try:
+                color = discord.Colour(int(color, 16))
+                newrloe = await guild.create_role(name=new_role_name,colour=color,reason=reason)
+                await interaction.response.send_message(f"已新增{newrloe.name}",ephemeral=True)
+                if give_in_you == True:
+                    await member.add_roles(newrloe)
+                    await interaction.followup.send(f"已給予{member.nick} {newrloe.name} 身分組")
+            except ValueError:
+                await interaction.response.send_message("顏色格式錯誤，請使用十六進制顏色碼，例如 'FF5733'。")
+                return
         except Exception as e:
             await interaction.response.send_message(f"錯誤:{e}",ephemeral=True)
     
@@ -188,11 +197,12 @@ class Slash(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f"報錯:{e}",ephemeral=True)
 
+
     @app_commands.command(name="say",description="讓機器人幫你說話")
     async def say(self,interaction:discord.Interaction,話:str):
         try:
             channel = interaction.channel
-            await channel.send(f"# {話}")
+            await channel.send(f"{話}")
             await interaction.response.send_message("已執行指令",ephemeral=True)
         except Exception as e:
             await interaction.response.send_message(f"發生錯誤:{e}")
