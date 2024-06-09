@@ -174,7 +174,7 @@ class Slash(commands.Cog):
             try:
                 color = discord.Colour(int(color, 16))
                 newrloe = await guild.create_role(name=new_role_name,colour=color,reason=reason)
-                await interaction.response.send_message(f"已新增{newrloe.name}",ephemeral=True)
+                await interaction.response.send_message(f"已新增{newrloe.name}")
                 if give_in_you == True:
                     await member.add_roles(newrloe)
                     await interaction.followup.send(f"已給予{member.nick} {newrloe.name} 身分組")
