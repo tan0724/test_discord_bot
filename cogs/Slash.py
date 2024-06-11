@@ -344,5 +344,24 @@ class Slash(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f"錯誤:{e}")
 
+    @app_commands.command(name="voting",description="幫機器人投票")
+    async def botVoting(self,interaction:discord.Interaction):
+        try:
+            random7_int = random.randint(0, 255)
+            random8_int = random.randint(0, 255)
+            random9_int = random.randint(0, 255)
+            emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
+            embed = discord.Embed(title="幫機器人投票", color= emb_color)
+            embed.add_field(name="https://top.gg/bot/998929254265929788/vote",value="",inline=False)
+            await interaction.response.send_message(embed=embed) 
+        except Exception as e:
+            random7_int = random.randint(0, 255)
+            random8_int = random.randint(0, 255)
+            random9_int = random.randint(0, 255)
+            emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
+            embed = discord.Embed(title="錯誤", color= emb_color)
+            embed.add_field(name=e,value="若有問題請告知 @tan_07_24 ",inline=False)
+            await interaction.response.send_message(embed=embed) 
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(Slash(bot))
