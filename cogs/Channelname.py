@@ -1,3 +1,4 @@
+import random
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -51,7 +52,13 @@ class Channelname(commands.Cog):
             await channel.edit(bitrate=bitrate1)
             await interaction.response.send_message(f"已將位元率改成{bitrate1}")
         except Exception as e:
-                await interaction.response.send_message(f"錯誤:{e}")
+            random7_int = random.randint(0, 255)
+            random8_int = random.randint(0, 255)
+            random9_int = random.randint(0, 255)
+            emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
+            embed = discord.Embed(title="錯誤", color= emb_color)
+            embed.add_field(name=e,value="若有問題請告知 @tan_07_24 ",inline=False)
+            await interaction.response.send_message(embed=embed) 
 
     @app_commands.command(name="更改語音頻道限制人數", description="更改語音頻道限制人數")
     @app_commands.checks.has_permissions(manage_channels=True)
@@ -60,7 +67,13 @@ class Channelname(commands.Cog):
             await channel.edit(user_limit=user_limit)
             await interaction.response.send_message(f"已限制頻道人數為: {user_limit}")
         except Exception as e:
-              await interaction.response.send_message(f"錯誤:{e}")
+            random7_int = random.randint(0, 255)
+            random8_int = random.randint(0, 255)
+            random9_int = random.randint(0, 255)
+            emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
+            embed = discord.Embed(title="錯誤", color= emb_color)
+            embed.add_field(name=e,value="若有問題請告知 @tan_07_24 ",inline=False)
+            await interaction.response.send_message(embed=embed) 
 
     @app_commands.command(name="更改文字頻道說名", description="更改文字頻道說名")
     @app_commands.checks.has_permissions(manage_channels=True)
