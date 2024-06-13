@@ -115,7 +115,7 @@ class Voicenew(commands.Cog):
 
     @app_commands.command(name="保留語音動態房",description="將語音房間設為永久存留")
     @app_commands.checks.has_permissions(manage_channels=True)
-    async def Retain_the_channel(self,interaction:discord.Interaction,channel:discord.VoiceChannel):
+    async def Retainchannel(self,interaction:discord.Interaction,channel:discord.VoiceChannel):
         try:
             channel_id = channel.id
             con = sqlite3.connect("voicenew.db")
