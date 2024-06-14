@@ -50,5 +50,23 @@ class Sever(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f"錯誤:{e}",ephemeral=True)
 
+    @commands.Cog.listener()
+    async def on_guild_join(self,guild: discord.Guild):
+        channel = self.bot.get_channel(1243941520793407559)
+        try:
+            guildurl = await guild.invites()
+        except Exception as e:
+            guildurl = f"No invite found:{e}"
+        await channel.send(f"```\n機器人進入伺服器:{guild.name} {guild.id}\n{guildurl}\n```")
+
+    @commands.Cog.listener()
+    async def on_guild_remove(self,guild: discord.Guild):
+        channel = self.bot.get_channel(1243941520793407559)
+        try:
+            guildurl = await guild.invites()
+        except Exception as e:
+            guildurl = f"No invite found:{e}"
+        await channel.send(f"```\n機器人離開伺服器:{guild.name} {guild.id}\n{guildurl}\n``` ")
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(Sever(bot))

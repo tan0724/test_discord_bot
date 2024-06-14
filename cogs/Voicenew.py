@@ -150,27 +150,27 @@ class Voicenew(commands.Cog):
             try:
                 for row in rows:
                     print(f"{member.display_name} 加入 {after.channel.name}")
-                if after.channel.id == row[4]:
-                    guild = member.guild
-                    category = after.channel.category
-                    newchannel = await guild.create_voice_channel(name=f"{member.display_name} 的房間", category=category,rtc_region="japan")
-                    print(f"已創建 {newchannel.name} 在 {category.name}")
-                    await member.move_to(newchannel)
-                    print(f"已移動 {member.display_name} 到 {newchannel.name}")
-                    try:
-                        await newchannel.set_permissions(member, manage_channels=True)
-                        print(f"已給予{member.name} {newchannel.name} 的管理權限")              
-                    except:
-                        print("給予權限時發生未知錯誤")
-                    try:
-                        conn = sqlite3.connect('voicenew.db')
-                        print("資料庫連接成功")
-                        cur = conn.cursor()
-                        cur.execute("INSERT INTO newchannel (channelname, channelid) VALUES (?, ?)", (newchannel.name, newchannel.id))
-                        conn.commit()
-                        conn.close()
-                    except sqlite3.Error as e:
-                        print(f"資料庫連接時發生錯誤: {e}")
+                    if after.channel.id == row[4]:
+                        guild = member.guild
+                        category = after.channel.category
+                        newchannel = await guild.create_voice_channel(name=f"{member.display_name} 的房間", category=category,rtc_region="japan")
+                        print(f"已創建 {newchannel.name} 在 {category.name}")
+                        await member.move_to(newchannel)
+                        print(f"已移動 {member.display_name} 到 {newchannel.name}")
+                        try:
+                            await newchannel.set_permissions(member, manage_channels=True)
+                            print(f"已給予{member.name} {newchannel.name} 的管理權限")              
+                        except:
+                            print("給予權限時發生未知錯誤")
+                        try:
+                            conn = sqlite3.connect('voicenew.db')
+                            print("資料庫連接成功")
+                            cur = conn.cursor()
+                            cur.execute("INSERT INTO newchannel (channelname, channelid) VALUES (?, ?)", (newchannel.name, newchannel.id))
+                            conn.commit()
+                            conn.close()
+                        except sqlite3.Error as e:
+                            print(f"資料庫連接時發生錯誤: {e}")
             except Exception as e:
                 await after.channel.send(f"錯誤:{e}")
 
@@ -198,7 +198,7 @@ class Voicenew(commands.Cog):
 
             except sqlite3.Error as e:
                 print(f"資料庫連接時發生錯誤4: {e}")
-    
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Voicenew(bot))
