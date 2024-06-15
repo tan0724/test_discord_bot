@@ -81,6 +81,20 @@ class Channelname(commands.Cog):
             await channel.edit(topic=topic)
             await interaction.response.send_message(f"已將頻道說明設為: {topic}")
           
+    @app_commands.command(name="move_to_none",description="移出語音頻道中的成員")
+    @app_commands.checks.has_permissions(manage_channels=True)
+    async def movetonone(self,interaction:discord.Interaction,user:discord.Member):
+        try:
+            await user.move_to(None)
+            await interaction.response.send_message(f"已將{user.name}踢出語音頻道",ephemeral=True)
+        except Exception as e:
+            random7_int = random.randint(0, 255)
+            random8_int = random.randint(0, 255)
+            random9_int = random.randint(0, 255)
+            emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
+            embed = discord.Embed(title="錯誤", color= emb_color)
+            embed.add_field(name=e,value="若有問題請告知 <@710128890240041091> ",inline=False)
+            await interaction.response.send_message(embed=embed,ephemeral=True) 
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Channelname(bot))
