@@ -57,7 +57,7 @@ class Channelname(commands.Cog):
             random9_int = random.randint(0, 255)
             emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
             embed = discord.Embed(title="錯誤", color= emb_color)
-            embed.add_field(name=e,value="若有問題請告知 @tan_07_24 ",inline=False)
+            embed.add_field(name=e,value="若有問題請告知 <@710128890240041091> ",inline=False)
             await interaction.response.send_message(embed=embed) 
 
     @app_commands.command(name="更改語音頻道限制人數", description="更改語音頻道限制人數")
@@ -72,7 +72,7 @@ class Channelname(commands.Cog):
             random9_int = random.randint(0, 255)
             emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
             embed = discord.Embed(title="錯誤", color= emb_color)
-            embed.add_field(name=e,value="若有問題請告知 @tan_07_24 ",inline=False)
+            embed.add_field(name=e,value="若有問題請告知 <@710128890240041091> ",inline=False)
             await interaction.response.send_message(embed=embed) 
 
     @app_commands.command(name="更改文字頻道說名", description="更改文字頻道說名")
