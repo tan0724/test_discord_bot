@@ -207,56 +207,7 @@ class Slash(commands.Cog):
         except Exception as e:
             await interaction.response.send_message(f"發生錯誤:{e}")
 
-    """@app_commands.command(name="join_in_voicechannel_record",description="讓機器人進入語音頻道錄音")
-    async def record(self,interaction:discord.Interaction,channel:discord.VoiceChannel):
-        try:
-            guild = interaction.guild
-            await channel.connect()
-            vc = guild.voice_client
-            # 使用 FFmpeg 進行錄音
-            ffmpeg_process = subprocess.Popen([
-                'ffmpeg', 
-                '-y',  # 覆蓋輸出文件
-                '-f', 's16le', 
-                '-ar', '44100', 
-                '-ac', '2', 
-                '-i', 'pipe:0',
-                f'{channel.name}.wav'
-            ], stdin=subprocess.PIPE)
-
-            def audio_callback(data):
-                ffmpeg_process.stdin.write(data)
-
-            vc.listen(discord.PCMAudio(audio_callback))
-            await interaction.response.send_message("已開始錄音")
-        
-        except Exception as e:
-            random7_int = random.randint(0, 255)
-            random8_int = random.randint(0, 255)
-            random9_int = random.randint(0, 255)
-            emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
-            embed = discord.Embed(title="錯誤", color= emb_color)
-            embed.add_field(name=e,value="若有問題請告知 <@710128890240041091> ",inline=False)
-            await interaction.response.send_message(embed=embed) 
-
-    @app_commands.command(name="stop_record",description="讓機器人停止錄音並離開語音")
-    async def stoprecord(self,interaction:discord.Interaction):
-        try:
-            guild = interaction.guild
-            vc = guild.voice_client
-            if ffmpeg_process is not None:
-                ffmpeg_process.stdin.close()
-                ffmpeg_process.wait()
-            await guild.voice_client.disconnect()
-            await interaction.response.send_message("結束錄音")
-        except Exception as e:
-            random7_int = random.randint(0, 255)
-            random8_int = random.randint(0, 255)
-            random9_int = random.randint(0, 255)
-            emb_color = discord.Color.from_rgb(random7_int, random8_int , random9_int)
-            embed = discord.Embed(title="錯誤", color= emb_color)
-            embed.add_field(name=e,value="若有問題請告知 <@710128890240041091> ",inline=False)
-            await interaction.response.send_message(embed=embed) """
+    
 
     @app_commands.command(name="ban",description="停權使用者")
     @app_commands.checks.has_permissions(administrator=True)

@@ -4,6 +4,8 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ext import commands
 import sqlite3
+from pytube import YouTube
+import os
 
 #drop table 
 con = sqlite3.connect('voicenew.db') # 連線資料庫
@@ -32,7 +34,6 @@ class Voicenew(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("已載入voicenew")
-    
 
     @app_commands.command(name="設定動態語音頻道", description="設定動態語音頻道入口")
     @app_commands.checks.has_permissions(administrator=True)
